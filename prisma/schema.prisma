@@ -19,11 +19,92 @@ model User {
   contactNo  String
   address    String
   profileImg String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  reviewsAndRatings ReviewAndRating[]
 
   @@map("users")
+}
+
+model Category {
+  id        String   @id @default(uuid())
+  title     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  books Book[]
+
+  @@map("categories")
+}
+
+model Book {
+  id              String   @id @default(uuid())
+  title           String
+  author          String
+  price           Float
+  genre           String
+  publicationDate String
+  categoryId      String
+  category        Category @relation(fields: [categoryId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  reviewsAndRatings ReviewAndRating[]
+  orderedBooks      OrderedBook[]
+
+  @@map("books")
+}
+
+model ReviewAndRating {
+  id     String @id @default(uuid())
+  review String
+  rating Int
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+  bookId String
+  book   Book   @relation(fields: [bookId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("reviews_and_ratings")
+}
+
+model Order {
+  id     String      @id @default(uuid())
+  status OrderStatus @default(pending)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  orderedBooks OrderedBook[]
+
+  @@map("orders")
+}
+
+model OrderedBook {
+  id       String @id @default(uuid())
+  orderId  String
+  order    Order  @relation(fields: [orderId], references: [id])
+  bookId   String
+  book     Book   @relation(fields: [bookId], references: [id])
+  quantity Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("ordered_books")
 }
 
 enum UserRole {
   admin
   customer
+}
+
+enum OrderStatus {
+  pending
+  shipped
+  delivered
 }
