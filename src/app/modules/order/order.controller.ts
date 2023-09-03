@@ -37,7 +37,7 @@ export const getAllOrder = catchAsync(async (req: Request, res: Response) => {
 export const getSingleOrder = catchAsync(
   async (req: Request, res: Response) => {
     const user = req.user;
-    const result = await getSingleOrderFromDB(user, req.params.id);
+    const result = await getSingleOrderFromDB(user, req.params.orderId);
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,

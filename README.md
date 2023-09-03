@@ -2,9 +2,14 @@
 
 ### Application Routes:
 
-#### User
+#### Auth
 
 - https://book-catalog-backend-assignment-8.vercel.app/api/v1/auth/signup (POST)
+- https://book-catalog-backend-assignment-8.vercel.app/api/v1/auth/signin (POST)
+- https://book-catalog-backend-assignment-8.vercel.app/api/v1/auth/refresh-token (POST)
+
+#### User
+
 - https://book-catalog-backend-assignment-8.vercel.app/api/v1/users (GET)
 - https://book-catalog-backend-assignment-8.vercel.app/api/v1/users/6177a5b87d32123f08d2f5d4 (Single GET) Include an id that is saved in your database
 - https://book-catalog-backend-assignment-8.vercel.app/api/v1/users/6177a5b87d32123f08d2f5d4 (PATCH)
@@ -31,5 +36,5 @@
 ### Orders
 
 - https://book-catalog-backend-assignment-8.vercel.app/api/v1/orders/create-order (POST)
-- https://book-catalog-backend-assignment-8.vercel.app/api/v1/orders (GET) 
+- https://book-catalog-backend-assignment-8.vercel.app/api/v1/orders (GET)
 - https://book-catalog-backend-assignment-8.vercel.app/api/v1/orders/:orderId (GET)

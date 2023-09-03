@@ -81,6 +81,7 @@ export const getSingleOrderFromDB = async (
   user: JwtPayload | null,
   id: string
 ): Promise<Order | null> => {
+  console.log(user, id);
   if (user?.role === "admin") {
     const result = await prisma.order.findUnique({
       where: {
@@ -101,6 +102,10 @@ export const getSingleOrderFromDB = async (
         orderedBooks: true,
       },
     });
+    console.log(result);
+    if (!result) {
+      throw new ApiError(httpStatus.BAD_REQUEST, "There is no order for you");
+    }
     return result;
   } else {
     throw new ApiError(httpStatus.BAD_REQUEST, "There is no order for you");
