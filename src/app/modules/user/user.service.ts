@@ -16,7 +16,7 @@ export const getAllUserFromDB = async (
   filters: IUserFilters,
   paginationOptions: IPaginationOptions
 ): Promise<IGenericResponse<Partial<User>[]>> => {
-  const { page, limit, skip, sortBy, sortOrder } =
+  const { page, size, skip, sortBy, sortOrder } =
     calculatePagination(paginationOptions);
   const { searchTerm, ...filtersData } = filters;
 
@@ -49,7 +49,7 @@ export const getAllUserFromDB = async (
   const result = await prisma.user.findMany({
     where: whereCondition,
     skip,
-    take: limit,
+    take: size,
     orderBy:
       sortBy && sortOrder
         ? {
@@ -68,7 +68,7 @@ export const getAllUserFromDB = async (
     meta: {
       total,
       page,
-      limit,
+      size,
     },
     data: resultWithoutPassword,
   };

@@ -23,7 +23,7 @@ export const getAllCategoryFromDB = async (
   filters: ICategoryFilters,
   paginationOptions: IPaginationOptions
 ): Promise<IGenericResponse<Category[]>> => {
-  const { page, limit, skip, sortBy, sortOrder } =
+  const { page, size, skip, sortBy, sortOrder } =
     calculatePagination(paginationOptions);
   const { searchTerm, ...filtersData } = filters;
 
@@ -56,7 +56,7 @@ export const getAllCategoryFromDB = async (
   const result = await prisma.category.findMany({
     where: whereCondition,
     skip,
-    take: limit,
+    take: size,
     orderBy:
       sortBy && sortOrder
         ? {
@@ -70,7 +70,7 @@ export const getAllCategoryFromDB = async (
     meta: {
       total,
       page,
-      limit,
+      size,
     },
     data: result,
   };
