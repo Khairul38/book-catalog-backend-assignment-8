@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Prisma, User } from "@prisma/client";
+import bcrypt from "bcrypt";
 import httpStatus from "http-status";
+import config from "../../../config";
 import ApiError from "../../../errors/ApiError";
 import { calculatePagination } from "../../../helpers/paginationHelper";
 import { prismaExclude } from "../../../helpers/prismaExcludeHelper";
@@ -88,5 +90,67 @@ export const getSingleUserFromDB = async (
     return userWithoutPassword;
   } else {
     throw new ApiError(httpStatus.BAD_REQUEST, "There is no user with the id");
+  }
+};
+
+export const updateSingleUserToDB = async (
+  id: string,
+  payload: Partial<User>
+): Promise<Partial<User> | null> => {
+  if (payload.email) {
+    const isExist = await prisma.user.findUnique({
+      where: {
+        email: payload.email,
+      },
+    });
+    if (isExist) {
+      throw new ApiError(
+        httpStatus.CONFLICT,
+        "Another user already exists with this email. Please provide a new email."
+      );
+    }
+  }
+
+  // hash password before update
+  if (payload.password) {
+    payload.password = await bcrypt.hash(
+      payload.password,
+      Number(config.bcrypt_salt_rounds)
+    );
+  }
+
+  const result = await prisma.user.update({
+    where: {
+      id,
+    },
+    data: payload,
+  });
+
+  if (result) {
+    const userWithoutPassword = prismaExclude<User, "password">(result, [
+      "password",
+    ]);
+    return userWithoutPassword;
+  } else {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      "There is no user with the id/Failed to update user"
+    );
+  }
+};
+
+export const deleteSingleUserFromDB = async (
+  id: string
+): Promise<Partial<User> | undefined> => {
+  const result = await prisma.user.delete({
+    where: {
+      id,
+    },
+  });
+  if (result) {
+    const userWithoutPassword = prismaExclude<User, "password">(result, [
+      "password",
+    ]);
+    return userWithoutPassword;
   }
 };
