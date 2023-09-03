@@ -12,7 +12,10 @@ const auth =
       //get authorization token
       const token = req.headers.authorization;
       if (!token) {
-        throw new ApiError(httpStatus.UNAUTHORIZED, "You are not authorized");
+        throw new ApiError(
+          httpStatus.NOT_FOUND,
+          "Please provide authorized token"
+        );
       }
       // verify token
       let verifiedUser = null;
@@ -23,7 +26,7 @@ const auth =
 
       // role diye guard korar jnno
       if (requiredRoles.length && !requiredRoles.includes(verifiedUser.role)) {
-        throw new ApiError(httpStatus.FORBIDDEN, "Forbidden");
+        throw new ApiError(httpStatus.UNAUTHORIZED, "You are not authorized");
       }
       next();
     } catch (error) {
