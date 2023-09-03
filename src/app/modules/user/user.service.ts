@@ -13,7 +13,7 @@ import { IUserFilters } from "./user.interface";
 export const getAllUserFromDB = async (
   filters: IUserFilters,
   paginationOptions: IPaginationOptions
-): Promise<IGenericResponse<User[]>> => {
+): Promise<IGenericResponse<Partial<User>[]>> => {
   const { page, limit, skip, sortBy, sortOrder } =
     calculatePagination(paginationOptions);
   const { searchTerm, ...filtersData } = filters;
@@ -55,6 +55,11 @@ export const getAllUserFromDB = async (
           }
         : { createdAt: "desc" },
   });
+
+  const resultWithoutPassword = result.map(r =>
+    prismaExclude<User, "password">(r, ["password"])
+  );
+
   const total = await prisma.user.count();
 
   return {
@@ -63,7 +68,7 @@ export const getAllUserFromDB = async (
       page,
       limit,
     },
-    data: result,
+    data: resultWithoutPassword,
   };
 };
 
