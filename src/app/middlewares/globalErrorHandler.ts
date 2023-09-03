@@ -2,15 +2,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-undefined */
 /* eslint-disable no-unused-expressions */
-import { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
-import { ZodError } from 'zod';
-import config from '../../config';
-import ApiError from '../../errors/ApiError';
-import handleClientError from '../../errors/handleClientError.ts';
-import handleValidationError from '../../errors/handleValidationError';
-import handleZodError from '../../errors/handleZodError';
-import { IGenericErrorMessage } from '../../interfaces/error';
-import { Prisma } from '@prisma/client';
+import { ErrorRequestHandler, NextFunction, Request, Response } from "express";
+import { ZodError } from "zod";
+import config from "../../config";
+import ApiError from "../../errors/ApiError";
+import handleClientError from "../../errors/handleClientError.ts";
+import handleValidationError from "../../errors/handleValidationError";
+import handleZodError from "../../errors/handleZodError";
+import { IGenericErrorMessage } from "../../interfaces/error";
+import { Prisma } from "@prisma/client";
 
 const globalErrorHandler: ErrorRequestHandler = (
   error,
@@ -18,10 +18,10 @@ const globalErrorHandler: ErrorRequestHandler = (
   res: Response,
   next: NextFunction
 ) => {
-  config.env === 'development' && console.log('GlobalErrorHandler:-', error);
+  config.env === "development" && console.log("GlobalErrorHandler:-", error);
 
   let statusCode = 500;
-  let message = 'Something went wrong !';
+  let message = "Something went wrong !";
   let errorMessages: IGenericErrorMessage[] = [];
 
   if (error instanceof Prisma.PrismaClientValidationError) {
@@ -45,7 +45,7 @@ const globalErrorHandler: ErrorRequestHandler = (
     errorMessages = error?.message
       ? [
           {
-            path: '',
+            path: "",
             message: error?.message,
           },
         ]
@@ -55,7 +55,7 @@ const globalErrorHandler: ErrorRequestHandler = (
     errorMessages = error?.message
       ? [
           {
-            path: '',
+            path: "",
             message: error?.message,
           },
         ]
@@ -66,7 +66,7 @@ const globalErrorHandler: ErrorRequestHandler = (
     success: false,
     message,
     errorMessages,
-    stack: config.env !== 'production' ? error?.stack : undefined,
+    stack: config.env !== "production" ? error?.stack : undefined,
   });
 };
 
