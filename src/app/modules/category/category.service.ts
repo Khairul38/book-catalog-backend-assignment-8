@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Category, Prisma } from "@prisma/client";
-import { prisma } from "../../../shared/prisma";
-import { ICategoryFilters } from "./category.interface";
-import { IPaginationOptions } from "../../../interfaces/pagination";
-import { IGenericResponse } from "../../../interfaces/common";
+import httpStatus from "http-status";
+import ApiError from "../../../errors/ApiError";
 import { calculatePagination } from "../../../helpers/paginationHelper";
+import { IGenericResponse } from "../../../interfaces/common";
+import { IPaginationOptions } from "../../../interfaces/pagination";
+import { prisma } from "../../../shared/prisma";
 import { categorySearchableFields } from "./category.constant";
+import { ICategoryFilters } from "./category.interface";
 
 export const createCategoryToDB = async (
   categoryData: Category
@@ -81,7 +83,57 @@ export const getSingleCategoryFromDB = async (
     where: {
       id,
     },
+    include: {
+      books: true,
+    },
   });
 
-  return result;
+  if (result) {
+    return result;
+  } else {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      "There is no category with the id/Failed to fetched category"
+    );
+  }
+};
+
+export const updateSingleCategoryToDB = async (
+  id: string,
+  payload: Partial<Category>
+): Promise<Partial<Category> | null> => {
+  const result = await prisma.category.update({
+    where: {
+      id,
+    },
+    data: payload,
+  });
+
+  if (result) {
+    return result;
+  } else {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      "There is no category with the id/Failed to update category"
+    );
+  }
+};
+
+export const deleteSingleCategoryFromDB = async (
+  id: string
+): Promise<Partial<Category> | undefined> => {
+  const result = await prisma.category.delete({
+    where: {
+      id,
+    },
+  });
+
+  if (result) {
+    return result;
+  } else {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      "There is no category with the id/Failed to delete category"
+    );
+  }
 };

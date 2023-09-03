@@ -7,3 +7,9 @@ export const createCategoryZodSchema = z.object({
     }),
   }),
 });
+
+export const updateCategoryZodSchema = z.object({
+  body: z.object({
+    title: z.string().optional(),
+  }),
+});

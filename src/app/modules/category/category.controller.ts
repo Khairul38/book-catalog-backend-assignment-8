@@ -8,8 +8,10 @@ import sendResponse from "../../../shared/sendResponse";
 import { categoryFilterableFields } from "./category.constant";
 import {
   createCategoryToDB,
+  deleteSingleCategoryFromDB,
   getAllCategoryFromDB,
   getSingleCategoryFromDB,
+  updateSingleCategoryToDB,
 } from "./category.service";
 
 export const createCategory = catchAsync(
@@ -49,6 +51,33 @@ export const getSingleCategory = catchAsync(
       statusCode: httpStatus.OK,
       success: true,
       message: "Single category fetched successfully",
+      data: result,
+    });
+  }
+);
+
+export const updateSingleCategory = catchAsync(
+  async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const payload = req.body;
+    const result = await updateSingleCategoryToDB(id, payload);
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Category updated successfully",
+      data: result,
+    });
+  }
+);
+
+export const deleteSingleCategory = catchAsync(
+  async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const result = await deleteSingleCategoryFromDB(id);
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Category deleted successfully",
       data: result,
     });
   }
