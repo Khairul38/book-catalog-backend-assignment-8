@@ -18,8 +18,6 @@ const ApiError_1 = __importDefault(require("../../../errors/ApiError"));
 const prisma_1 = require("../../../shared/prisma");
 const createOrderToDB = (user, orderData) => __awaiter(void 0, void 0, void 0, function* () {
     const { orderedBooks } = orderData;
-    console.log(user);
-    console.log(orderData);
     const newOrder = yield prisma_1.prisma.$transaction((transactionClient) => __awaiter(void 0, void 0, void 0, function* () {
         const result = yield transactionClient.order.create({
             data: {
@@ -80,7 +78,6 @@ const getAllOrderFromDB = (user) => __awaiter(void 0, void 0, void 0, function* 
 });
 exports.getAllOrderFromDB = getAllOrderFromDB;
 const getSingleOrderFromDB = (user, id) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(user, id);
     if ((user === null || user === void 0 ? void 0 : user.role) === "admin") {
         const result = yield prisma_1.prisma.order.findUnique({
             where: {
@@ -102,7 +99,6 @@ const getSingleOrderFromDB = (user, id) => __awaiter(void 0, void 0, void 0, fun
                 orderedBooks: true,
             },
         });
-        console.log(result);
         if (!result) {
             throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, "There is no order for you");
         }

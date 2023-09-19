@@ -93,8 +93,6 @@ export const refreshTokenUserFromDB = async (
     throw new ApiError(httpStatus.FORBIDDEN, "Invalid Refresh Token");
   }
 
-  console.log(verifiedToken);
-
   const { email, name } = verifiedToken;
 
   // tumi delete hye gso  kintu tumar refresh token ase

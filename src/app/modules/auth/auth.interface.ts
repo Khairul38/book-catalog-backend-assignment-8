@@ -4,8 +4,9 @@ export type ILoginUser = {
 };
 
 export type ILoginUserResponse = {
-  accessToken: string;
+  accessToken?: string;
   refreshToken?: string;
+  token?: string;
 };
 
 export type IRefreshTokenResponse = {

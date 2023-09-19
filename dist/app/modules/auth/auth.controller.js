@@ -42,7 +42,7 @@ exports.createUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, v
 exports.loginUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const loginData = __rest(req.body, []);
     const result = yield (0, auth_service_1.loginUserFromDB)(loginData);
-    const { refreshToken } = result, others = __rest(result, ["refreshToken"]);
+    const { refreshToken, accessToken } = result;
     // set refresh token into cookie
     const cookieOptions = {
         secure: config_1.default.env === "production",
@@ -53,7 +53,7 @@ exports.loginUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, vo
         statusCode: http_status_1.default.OK,
         success: true,
         message: "User signin in successfully !",
-        data: others,
+        token: accessToken,
     });
 }));
 exports.refreshTokenUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
