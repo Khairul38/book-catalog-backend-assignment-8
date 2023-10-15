@@ -23,7 +23,7 @@ model User {
   updatedAt  DateTime @updatedAt
 
   reviewsAndRatings ReviewAndRating[]
-  bookings          Booking[]
+  orders            Order[]
 
   @@map("users")
 }
@@ -34,28 +34,28 @@ model Category {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  rooms Room[]
+  books Book[]
 
   @@map("categories")
 }
 
-model Room {
-  id          String   @id @default(uuid())
-  title       String
-  description String
-  adults      Int
-  size        Int
-  price       Int
-  categoryId  String
-  category    Category @relation(fields: [categoryId], references: [id])
+model Book {
+  id              String   @id @default(uuid())
+  title           String
+  author          String
+  price           Float
+  genre           String
+  publicationDate String
+  categoryId      String
+  category        Category @relation(fields: [categoryId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   reviewsAndRatings ReviewAndRating[]
-  bookings          Booking[]
+  orderedBooks      OrderedBook[]
 
-  @@map("rooms")
+  @@map("books")
 }
 
 model ReviewAndRating {
@@ -64,8 +64,8 @@ model ReviewAndRating {
   rating Int
   userId String
   user   User   @relation(fields: [userId], references: [id])
-  roomId String
-  room   Room   @relation(fields: [roomId], references: [id])
+  bookId String
+  book   Book   @relation(fields: [bookId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -73,21 +73,41 @@ model ReviewAndRating {
   @@map("reviews_and_ratings")
 }
 
-model Booking {
-  id     String        @id @default(uuid())
+model Order {
+  id     String      @id @default(uuid())
   userId String
-  user   User          @relation(fields: [userId], references: [id])
-  roomId String
-  room   Room          @relation(fields: [roomId], references: [id])
+  user   User        @relation(fields: [userId], references: [id])
+  status OrderStatus @default(pending)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@map("bookings")
+  orderedBooks OrderedBook[]
+
+  @@map("orders")
+}
+
+model OrderedBook {
+  id       String @id @default(uuid())
+  orderId  String
+  order    Order  @relation(fields: [orderId], references: [id])
+  bookId   String
+  book     Book   @relation(fields: [bookId], references: [id])
+  quantity Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("ordered_books")
 }
 
 enum UserRole {
-  super_admin
   admin
   customer
+}
+
+enum OrderStatus {
+  pending
+  shipped
+  delivered
 }
