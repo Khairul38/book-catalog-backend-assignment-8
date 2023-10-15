@@ -1,5 +1,5 @@
 {
-  "name": "book-catalog-backend",
+  "name": "hotel-book-backend",
   "version": "1.0.0",
   "description": "",
   "main": "src/server.ts",
