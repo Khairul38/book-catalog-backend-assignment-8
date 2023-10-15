@@ -1,6 +1,6 @@
 ### Live Link: https://book-catalog-backend-assignment-8.vercel.app
 
-### Application Routes:
+### Application Routes:-
 
 #### Auth
 
